@@ -18,11 +18,15 @@ const Home = () => {
 	return (
 		<div className="container">
 			<ul>
-				<h1>To-do To-day</h1>
+				<h1>To-do</h1>
 				<li>
 					<input
 						type="text"
-						onChange={(e) => setInputValue(e.target.value)}
+						onChange={(e) => {
+							console.log(e)
+							setInputValue(e.target.value)
+						}
+						}
 						value={inputValue}
 						onKeyPress={handleKeyPress}
 						placeholder="What do you need to do?"

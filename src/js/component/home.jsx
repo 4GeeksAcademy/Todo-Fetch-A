@@ -18,7 +18,7 @@ const Home = () => {
 	return (
 		<div className="container">
 			<ul>
-				<h1>My Todos</h1>
+				<h1>To-do To-day</h1>
 				<li>
 					<input
 						type="text"
@@ -32,16 +32,16 @@ const Home = () => {
 					<li key={index}>
 						{todo}{" "}
 						<i
+							id="icon-trash"
 							className="fas fa-trash"
 							onClick={() => handleDeleteTodo(todo)}
 						></i>
 					</li>
 				))}
 			</ul>
-			<div>{todos.length} tasks</div>
+			<div className="tasks">{todos.length} tasks</div>
 		</div>
 	);
 };
-
 
 export default Home;

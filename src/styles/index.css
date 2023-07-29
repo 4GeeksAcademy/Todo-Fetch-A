@@ -1,11 +1,21 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 10px; /* Añadimos un poco de espacio para mejorar la apariencia */
+}
+
 ul li {
   border: 1px solid black;
   list-style: none;
   padding: 5px;
+  width: 800px;
 }
 
 ul {
   padding: 0;
+  margin: 0;
 }
 
 h1 {
@@ -15,4 +25,15 @@ h1 {
 
 input {
   border: none;
+}
+
+#icon-trash {
+  float: right;
+}
+
+.tasks {
+  display: flex;
+  align-items: center;
+  width: 800px;
+  padding: 5px;
 }

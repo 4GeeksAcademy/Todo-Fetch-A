@@ -37,3 +37,12 @@ input {
   width: 800px;
   padding: 5px;
 }
+
+#checkbox {
+  margin-right: 5px;
+}
+
+.alert-task {
+  font-size: small;
+  color: brown;
+}

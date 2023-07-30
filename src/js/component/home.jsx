@@ -1,49 +1,73 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Home = () => {
 	const [inputValue, setInputValue] = useState("");
-	const [userName, setUserName] = useState("Anggie");
+	const [userName, setUserName] = useState("");
 	const [todos, setTodos] = useState([]);
 
+	const getUrl = () => `https://playground.4geeks.com/apis/fake/todos/user/${userName}`
 
-	const getData = useEffect(async () => {
-		let response = await fetch(
-			"https://playground.4geeks.com/apis/fake/todos/user/Anggie",
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
+	let myInput = useRef()
+
+	useEffect(async () => {
+		if (userName !== "") {
+			let response = await fetch(
+				getUrl(),
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			if(!response.ok){
+				response = await fetch(
+					getUrl(),
+					{
+						method: "POST",
+						body: JSON.stringify([]),
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}
+				);
+				response = await fetch(
+					getUrl(),
+					{
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}
+				);
 			}
-		);
-		let data = await response.json();
-		setTodos(data);
-	}, []);
+			
 
-	const updateApi = async () => {
+
+			let data = await response.json();
+			setTodos(data);
+		}
+		else {
+			setTodos([])
+		}
+
+	}
+
+		, [userName]);
+
+	const updateApi = async (data = false) => {
+		if (!data) data = todos
 		let response = await fetch(
-			"https://playground.4geeks.com/apis/fake/todos/user/Anggie",
+			getUrl(),
 			{
 				method: "PUT",
-				body: JSON.stringify(todos),
+				body: JSON.stringify(data),
 				headers: {
 					"Content-Type": "application/json",
 				},
 			}
 		);
 	};
-
-	const deleteApi = async () => {
-		let response = await fetch(
-			"https://playground.4geeks.com/apis/fake/todos/user/Anggie",
-			{
-				method: "DELETE",
-				headers: {
-					"Content-Type": "application/json",
-				},
-			}
-		);
-	}
 
 	const handleKeyPress = async (e) => {
 		if (e.key === "Enter") {
@@ -57,11 +81,10 @@ const Home = () => {
 	};
 
 	const handleDeleteTodo = async (index) => {
-		await deleteApi();
-		const newTodos = [...todos];
+		let newTodos = [...todos];
 		newTodos.splice(index, 1);
 		setTodos(newTodos);
-		console.log(newTodos)
+		await updateApi(newTodos);
 	};
 
 	const handleToggleDone = async (index) => {
@@ -77,24 +100,21 @@ const Home = () => {
 		});
 		setTodos(updatedTodos);
 		console.log(updatedTodos);
-		await updateApi();
+		await updateApi(updatedTodos);
 	};
 
-
-	const handleUserNameChange = (e) => {
-		setUserName(e.target.value);
-	};
+	const changeUser = () => setUserName(myInput.current.value)
 
 	return (
 		<div className="container">
 			<ul>
 				<h1>To-do</h1>
 				<input
+					ref={myInput}
 					type="text"
-					onChange={handleUserNameChange}
-					value={userName}
 					placeholder="Username"
 				/>
+				<button onClick={changeUser}>Buscar usuario</button>
 				<li>
 					<input
 						type="text"
@@ -108,7 +128,7 @@ const Home = () => {
 						<div className="alert-task">No hay tareas, añadir tareas</div>
 					)}
 				</li>
-				{todos.map((todo, index) => (
+				{todos ? todos.map((todo, index) => (
 					<li key={index}>
 						<input
 							id="checkbox"
@@ -129,7 +149,7 @@ const Home = () => {
 							onClick={() => handleDeleteTodo(index)}
 						></i>
 					</li>
-				))}
+				)) : <li>nada</li>}
 			</ul>
 			<div className="tasks">{todos.length} tasks</div>
 		</div>
